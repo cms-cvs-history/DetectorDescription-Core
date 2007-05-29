@@ -3,4 +3,5 @@
 <use name=cppunit>
 
 <bin name=testCore file=testRunner.cpp,DDIsValid.cppunit.cc>
+<bin name=testShapes file=testShapes.cpp>
 </bin>
