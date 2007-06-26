@@ -30,13 +30,11 @@ DDCompactView::DDCompactView()
     global();
 }  
 
-
+// NOTE TO SELF:  Mike, DO NOT try to fix the memory leak here by going global again!!!
 DDCompactView::DDCompactView(const DDLogicalPart & rootnodedata)
-  //  : rep_(new DDCompactViewImpl(rootnodedata))
+  : rep_(new DDCompactViewImpl(rootnodedata))
   {
     // global_ = rep_;
-    DDRootDef::instance().set(rootnodedata);
-    global();
   }
 
 // Prototypish, to be used from within DDpos(...)
@@ -162,8 +160,10 @@ void DDCompactView::setRoot(const DDLogicalPart & root)
 //#include "DetectorDescription/Core/interface/DDPosPart.h"
 #include "DetectorDescription/Core/interface/DDSpecifics.h"
 //#include "DetectorDescription/ExprAlgo/interface/ExprEvalSingleton.h"
+
 void DDCompactView::clear()
 {
+
  graph_type & g = writeableGraph();
  
  graph_type::adj_iterator ait = g.begin();
@@ -181,7 +181,8 @@ void DDCompactView::clear()
  DDSolid::clear();
  DDRotation::clear();
  DDSpecifics::clear();
- DDValue::clear();
+ DDValue::clear(); 
+
  //NOT GOOD Practice! either! -- Mike Case
  LPNAMES::instance().clear();
  DIVNAMES::instance().clear();
@@ -203,5 +204,11 @@ void DDCompactView::clear()
  for (; it != v.end(); ++it) 
    delete *it;
 */   
- rep_=0;  
+//(mec:2007-06-07) Do not understand, but setting this to 0 caused memory crashes, like Ptr was being
+// deleted twice or something?  I only get the error message when exiting iguana :-(
+//(mec:2007-06-08) Got it.  In the destructor of XMLIdealGeometrySource I do the illegal thing and "grab"
+// DDCompactView cpv; then I cpv.clear();  Since clear() sets this rep_=0, when the boost autopointer
+// goes out of scope, this 0 representation causes it to blow up...  SOOO leave this problem until DD is
+// re-written...
+// rep_=0;  
 }
