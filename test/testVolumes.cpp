@@ -74,6 +74,14 @@ int main(int argc, char *argv[]) {
 	    << (4./3. * Geom::pi() * 3.0*cm * 3.0*cm *3.0*cm / cm3 - 4./3. * Geom::pi() * 2.0*cm * 2.0*cm *2.0*cm / cm3) / 2.
 	    <<std::endl;
 
+  std::cout << "\n30 degree span in theta; full phi \"top\" hemisphere" << std::endl;
+  doSphere ("fred1", 2.0*cm, 3.0*cm, 0.*deg, 360.*deg, 10.*deg, 30.*deg);
+
+  std::cout << "\n30 degree span in theta; full phi \"bottom\" hemisphere; mirror of above, so should be same." << std::endl;
+  doSphere ("fred1", 2.0*cm, 3.0*cm, 0.*deg, 360.*deg, 140.*deg, 30.*deg);
+
+  std::cout << "\n30 degree span in theta; full phi around equator (should be bigger than above)" << std::endl;
+  doSphere ("fred1", 2.0*cm, 3.0*cm, 0.*deg, 360.*deg, 75.*deg, 30.*deg);
 
 
   return EXIT_SUCCESS;
